@@ -1,0 +1,70 @@
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include "gamul.h"
+
+// font set for rendering
+const unsigned char fontset[FONTSET_SIZE] = {
+	0xF0, 0x90, 0x90, 0x90, 0xF0,		// 0
+	0x20, 0x60, 0x20, 0x20, 0x70,		// 1
+	0xF0, 0x10, 0xF0, 0x80, 0xF0,		// 2
+	0xF0, 0x10, 0xF0, 0x10, 0xF0,		// 3
+	0x90, 0x90, 0xF0, 0x10, 0x10,		// 4
+	0xF0, 0x80, 0xF0, 0x10, 0xF0,		// 5
+	0xF0, 0x80, 0xF0, 0x90, 0xF0,		// 6
+	0xF0, 0x10, 0x20, 0x40, 0x40,		// 7
+	0xF0, 0x90, 0xF0, 0x90, 0xF0,		// 8
+	0xF0, 0x90, 0xF0, 0x10, 0xF0,		// 9
+	0xF0, 0x90, 0xF0, 0x90, 0x90,		// A
+	0xE0, 0x90, 0xE0, 0x90, 0xE0,		// B
+	0xF0, 0x80, 0x80, 0x80, 0xF0,		// C
+	0xE0, 0x90, 0x90, 0x90, 0xE0,		// D
+	0xF0, 0x80, 0xF0, 0x80, 0xF0,		// E
+	0xF0, 0x80, 0xF0, 0x80, 0x80		// F
+};
+
+void loadFont(uint8_t memory[]) {
+	for (int i = 0; i < FONTSET_SIZE; i++) {
+		memory[i] = fontset[i];
+	}
+}
+
+int load_file(char *file_name, unsigned char *buffer) 
+{
+	FILE *file;
+	int file_size;
+
+	file = fopen(file_name, "rb");
+
+	if (file == NULL) {
+		printf("Unable to open file\n");
+		return -1;
+	}
+
+	fseek(file, 0, SEEK_END);
+
+	file_size = ftell(file);
+
+	rewind(file);
+
+	fread(buffer, 1, file_size, file);
+	return 0;
+}
+
+
+/*	FUNCTION: display_func
+ *  ----------------------
+ *	Sample function that displays a pixel on the screen
+ *	PARAMETERS: 
+ *  gamer: architecture to be emulated, defined in gamul.h
+ *	RETURNS: none
+ */
+void display_func(gamul8 *gamer) {
+	gamer->display[20][40] = 1;
+	gamer->display[10][30] = 0;
+	gamer->display[0][0] = 1;
+	gamer->display[31][0] = 1;
+	gamer->display[0][62] = 1;
+}
